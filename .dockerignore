@@ -14,6 +14,7 @@ Dockerfile
 # These are for deploying the container, not for running the code inside it.
 deployment/
 !deployment/supervisord.conf
+!deployment/docker/
 test/
 
 # Student CLAP training (not needed in production)

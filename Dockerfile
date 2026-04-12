@@ -366,6 +366,9 @@ RUN set -eux; \
 COPY . /app
 COPY deployment/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Ensure entrypoint script is executable
+RUN chmod +x /app/deployment/docker/entrypoint.sh
+
 # ============================================================================
 # CPU CONSISTENCY SETTINGS
 # ============================================================================
@@ -403,4 +406,4 @@ ENV PYTHONPATH=/usr/local/lib/python3/dist-packages:/app
 EXPOSE 8000
 
 WORKDIR /workspace
-CMD ["bash", "-c", "if [ -n \"$TZ\" ] && [ -f \"/usr/share/zoneinfo/$TZ\" ]; then ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; elif [ -n \"$TZ\" ]; then echo \"Warning: timezone '$TZ' not found in /usr/share/zoneinfo\" >&2; fi; if [ \"$SERVICE_TYPE\" = \"worker\" ]; then echo 'Starting worker processes via supervisord...' && exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf; else echo 'Starting web service...' && exec gunicorn --bind 0.0.0.0:8000 --workers 1 --timeout 300 app:app; fi"]
+CMD ["/app/deployment/docker/entrypoint.sh"]
