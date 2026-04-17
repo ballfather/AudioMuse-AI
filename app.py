@@ -353,6 +353,9 @@ def index():
             schema:
               type: string
     """
+    if is_proxy_auth and not bool(getattr(g, 'proxy_is_admin', False)):
+        return redirect(url_for('map_bp.map_ui'))
+
     return render_template('index.html', title = 'AudioMuse-AI - Home Page', active='index')
 
 
